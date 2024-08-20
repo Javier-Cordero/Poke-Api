@@ -2,11 +2,8 @@ import React, { useContext } from 'react';
 import { PokemonContext } from '../context/PokemonContext';
 import { CardPokemon } from './CardPokemon';
 import { Loader } from './Loader';
-
 export const PokemonList = () => {
-	const { allPokemons, loading, filteredPokemons } =
-		useContext(PokemonContext);
-
+	const { allPokemons, loading, filteredPokemons } = useContext(PokemonContext);
 	return (
 		<>
 			{loading ? (

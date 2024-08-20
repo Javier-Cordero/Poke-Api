@@ -1,35 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useForm } from '../hook/useForm';
 import { PokemonContext } from './PokemonContext';
-
 export const PokemonProvider = ({ children }) => {
 	const [allPokemons, setAllPokemons] = useState([]);
 	const [globalPokemons, setGlobalPokemons] = useState([]);
 	const [offset, setOffset] = useState(0);
-
 	// Utilizar CustomHook - useForm
-	const { valueSearch, onInputChange, onResetForm } = useForm({valueSearch: '',});
-
+	const { valueSearch, onInputChange, onResetForm } = useForm({ valueSearch: '', });
 	// Estados para la aplicación simples
 	const [loading, setLoading] = useState(true);
 	const [active, setActive] = useState(false);
-
 	// lLamar 50 pokemones a la API
 	const getAllPokemons = async (limit = 50) => {
 		const res = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
 		const data = await res.json();
-
 		const promises = data.results.map(async pokemon => {
 			const res = await fetch(pokemon.url);
 			const data = await res.json();
 			return data;
 		});
 		const results = await Promise.all(promises);
-
 		setAllPokemons([...allPokemons, ...results]);
 		setLoading(false);
 	};
-
 	// Llamar todos los pokemones
 	const getGlobalPokemons = async () => {
 		const baseURL = 'https://pokeapi.co/api/v2/';
@@ -46,27 +39,16 @@ export const PokemonProvider = ({ children }) => {
 		setGlobalPokemons(results);
 		setLoading(false);
 	};
-
 	// Llamar a un pokemon por ID
 	const getPokemonByID = async id => {
 		const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 		const data = await res.json();
 		return data;
 	};
-
-	useEffect(() => {
-		getAllPokemons();
-	}, [offset]);
-
-	useEffect(() => {
-		getGlobalPokemons();
-	}, []);
-
+	useEffect(() => { getAllPokemons() }, [offset]);
+	useEffect(() => { getGlobalPokemons() }, []);
 	// BTN CARGAR MÁS
-	const onClickLoadMore = () => {
-		setOffset(offset + 50);
-	};
-
+	const onClickLoadMore = () => { setOffset(offset + 50) };
 	// Filter Function + State
 	const [typeSelected, setTypeSelected] = useState({
 		grass: false,
@@ -90,9 +72,7 @@ export const PokemonProvider = ({ children }) => {
 		unknow: false,
 		shadow: false,
 	});
-
 	const [filteredPokemons, setfilteredPokemons] = useState([]);
-
 	const handleCheckbox = e => {
 		setTypeSelected({
 			...typeSelected,
@@ -116,7 +96,6 @@ export const PokemonProvider = ({ children }) => {
 			setfilteredPokemons([...filteredResults]);
 		}
 	};
-
 	return (
 		<PokemonContext.Provider
 			value={{
