@@ -31,7 +31,6 @@ export const PokemonProvider = ({ children }) => {
 		const promises = data.results.map(async pokemon => {
 			const res = await fetch(pokemon.url);
 			const data = await res.json();
-			console.log(data)
 			return data;
 		});
 		const results = await Promise.all(promises);
